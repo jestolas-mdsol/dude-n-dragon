@@ -1,9 +1,19 @@
 import readline from 'readline';
 import EventEmitter from 'events';
 
-import { gameState, player, enemy } from './gameStates';
+import { gameState, playerCharacters, nonPlayerCharacters } from './gameStates';
 import { initializeEventListeners } from './listeners';
 import { gameMessages, playerActionNames } from './constants';
+
+// ====================================================================================
+// NEED TO DRY!!! #here
+const fetchPlayerData = code => (playerCharacters.find(pc => pc.code === code));
+const fetchEnemyrData = code => (nonPlayerCharacters.find(pc => pc.code === code));
+
+const player = fetchPlayerData('PC01');
+const enemy = fetchEnemyrData('EN01');
+
+// ====================================================================================
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -29,6 +39,12 @@ const closeAndExit = () => {
   process.exit(0);
 };
 
+// #here move this...
+const currentStatuses = () => {
+  console.log(`${player.name}: ${player.hitPoints}HP`);
+  console.log(`${enemy.name}: ${enemy.hitPoints}HP`);
+};
+
 // #combat
 const initiateCombat = () => {
   // #here
@@ -36,6 +52,8 @@ const initiateCombat = () => {
 
   // replace with current player status
   console.log(`You are in combat with ${enemy.name}.`);
+  currentStatuses();
+
   rl.question('What do you want to do?\n', (input) => {
     console.log(`You attempt to ${input}...`);
     if (playerActionNames.includes(input)) {
@@ -49,29 +67,37 @@ const initiateCombat = () => {
   });
 };
 
+// #here move this Util
+const updatePlayerName = (name) => { player.name = name; };
+
 const gameStart = () => {
-  if (player.name.length) {
-    initiateCombat();
-  } else {
+  if (!player.name) {
     rl.question('What is your name?\n', (answer) => {
       if (!answer.length) {
-        player.name = 'Nameless One';
+        updatePlayerName('Nameless One');
       } else {
-        player.name = answer;
+        updatePlayerName(answer);
       }
 
       console.log(`\nGreetings, ${player.name}!\n`);
       console.log(`${gameMessages.encounter}\n\n\n`);
       emit('loopGame');
     });
+  } else {
+    initiateCombat();
   }
 };
 
 // ! ! ! on gameState change, loop the game ! ! !
 const gameLoop = () => {
   // #here
-  //validate - only re-run game if current turn has ended!
-  gameStart();
+  // validate - only re-run game if current turn has ended!
+  if (gameState.previousRoundCount === gameState.currentRoundCount) {
+    incrementRounds();
+    emit('loopGame');
+  } else {
+    gameStart();
+  }
 };
 
 const initializeReadlineListeners = () => {

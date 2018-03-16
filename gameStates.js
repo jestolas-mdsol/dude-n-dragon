@@ -2,37 +2,69 @@ const gameState = {
   previousRoundCount: 0,
   currentRoundCount: 0,
   exitInvoked: false,
-  // stiff...
 };
 
-const currentActionData = {
-  initiatorCode: null, // player/enemy.code
-  targetCode: null, // player/enemy.code
-  actionType: null, // attack/defend/other targetaable actions
-  hitPointDelta: null, // +/- change in hp
-  hitPointDeltaType: null, // null by default || incr/decr
-  // other...
-};
+const playerCharacters = [
+  {
+    code: 'PC01', // primary key
+    type: 'player_character',
+    name: null,
+    inCombat: false, // set to true at beginning of combat
+    hitPoints: 100,
+    armorClass: 10,
+    defendModifier: 0.5,
+    actions: {
+      attacks: [ // category || actionType
+        {
+          code: 'ATK_01',
+          name: 'Sword Slash',
+          chargeTime: 0,
+          damageDieCount: 2,
+          dieSides: 6,
+        },
+      ],
+    },
+  },
+];
 
-const player = {
-  code: 'PL01',
-  name: '',
-  hitPoints: 100,
-  currentTarget: 'enemy', // can expand to target selection using targets array
-  // stuff...
-};
-
-const enemy = {
-  code: 'EN01',
-  name: 'Skald The Wyrm',
-  hitPoints: 300,
-  currentTarget: 'player',
-  // stuff...
-};
+const nonPlayerCharacters = [
+  {
+    code: 'EN01',
+    npcClass: 'wyrm', // can have other classes like civilian, "key" npcs, bandit, etc...
+    reputationWithPlayer: 0, // 0 to 10, determines hostility towards PC
+    name: 'Skald The Wyrm',
+    inCombat: false, // set to true at beginning of combat
+    hitPoints: 300,
+    armorClass: 10,
+    defendModifier: 0,
+    attacks: [
+      {
+        code: 'ATK_101',
+        name: 'Flame Breath',
+        chargeTime: 1,
+        damageDieCount: 2,
+        dieSides: 8,
+      },
+      {
+        code: 'ATK_102',
+        name: 'Claw Slash',
+        chargeTime: 0,
+        damageDieCount: 2,
+        dieSides: 4,
+      },
+      {
+        code: 'ATK_103',
+        name: 'Tail Whip',
+        chargeTime: 0,
+        damageDieCount: 1,
+        dieSides: 6,
+      },
+    ],
+  },
+];
 
 export {
   gameState,
-  player,
-  enemy,
-  currentActionData,
+  playerCharacters,
+  nonPlayerCharacters,
 };
