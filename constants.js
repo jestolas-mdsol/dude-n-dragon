@@ -47,9 +47,16 @@ const gameMessages = {
 // future improvement -- may not be necessary yet....
 const playerActionNames = ['attack', 'defend', 'run'];
 
+const actionCategories = {
+  attacks: 'attacks',
+  defends: 'defenses',
+  miscs: 'misc',
+};
+
 export {
   gameMessages,
   playerActionNames,
+  actionCategories,
   playerData,
   enemyData,
 };

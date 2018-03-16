@@ -9,6 +9,12 @@ const initializeEventListeners = (e) => {
 
   e.on('attack', () => {
     attack(e);
+
+    // STEPS::
+    // attack
+    // roll to hit
+      // if hit -- adjust enemy hp
+      // if miss -- proceed to enemy action
   });
 
   e.on('defend', () => {
@@ -20,12 +26,11 @@ const initializeEventListeners = (e) => {
   });
 
   e.on('dragonAction', () => {
-    console.log('dragon attacks...');
+    console.log('dragon attacks...\n\n');
     emit('loopGame');
   });
 
   e.on('loopGame', () => {
-    incrementRounds();
     gameLoop();
   });
 
