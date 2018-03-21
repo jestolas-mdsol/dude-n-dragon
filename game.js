@@ -22,8 +22,8 @@ const rl = readline.createInterface({
 
 const e = new EventEmitter();
 
-const emit = (eventName) => {
-  e.emit(eventName);
+const emit = (...args) => {
+  e.emit(args[0], args[1]);
 };
 
 const incrementRounds = () => {
@@ -41,8 +41,8 @@ const closeAndExit = () => {
 
 // #here move this...
 const currentStatuses = () => {
-  console.log(`${player.name}: ${player.hitPoints}HP`);
-  console.log(`${enemy.name}: ${enemy.hitPoints}HP`);
+  console.log(`\n\n${player.name}: ${player.hitPoints}HP`);
+  console.log(`${enemy.name}: ${enemy.hitPoints}HP\n\n`);
 };
 
 // #combat
@@ -57,11 +57,11 @@ const initiateCombat = () => {
   rl.question('What do you want to do?\n', (input) => {
     console.log(`You attempt to ${input}...`);
     if (playerActionNames.includes(input)) {
-      emit(input);
+      emit(input, 'player_character');
     } else if (input === 'exit') {
       emit('shutdown');
     } else {
-      console.log(`You can't do ${input}... Your turn has been wasted\n`);
+      console.log(`You can't do ${input || 'nothing'}... Your turn has been wasted\n`);
       emit('dragonAction');
     }
   });

@@ -7,27 +7,23 @@ const initializeEventListeners = (e) => {
     e.emit(eventName);
   };
 
-  e.on('attack', () => {
-    attack(e);
+  e.on('attack', (initiatorType) => {
+    console.log('initiatorType -- listener: ', initiatorType);
 
-    // STEPS::
-    // attack
-    // roll to hit
-      // if hit -- adjust enemy hp
-      // if miss -- proceed to enemy action
+    attack(e, initiatorType);
   });
 
-  e.on('defend', () => {
-    defend(e);
+  e.on('defend', (initiatorType) => {
+    defend(e, initiatorType);
   });
 
-  e.on('flee', () => {
-    flee(e);
+  e.on('flee', (initiatorType) => {
+    flee(e, initiatorType);
   });
 
   e.on('dragonAction', () => {
-    console.log('dragon attacks...\n\n');
-    emit('loopGame');
+    console.log('\npreparing dragon action...\n\n');
+    e.emit('attack', 'non_player_character')
   });
 
   e.on('loopGame', () => {

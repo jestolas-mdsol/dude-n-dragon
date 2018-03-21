@@ -6,8 +6,6 @@ import { actionCategories, playerData, enemyData, currentActionData } from './co
 // ==============
 const rollDie = n => (Math.floor((Math.random() * n) + 1));
 
-console.log(playerCharacters, nonPlayerCharacters);
-
 const fetchPlayerData = code => (playerCharacters.find(pc => pc.code === code));
 const fetchEnemyrData = code => (nonPlayerCharacters.find(npc => npc.code === code));
 
@@ -39,55 +37,92 @@ const calculateDamage = (dieCount, dieSides) => {
   return damageCounts.reduce((acc, cur) => acc + cur);
 };
 
-const updateHitPoints = (data) => {
-  if (data.adjustmentType === '+') {
-    enemy.hitPoints += data.hpAdjustment;
+const calculateDamageReduction = data => (data.damage * data.defendModifier);
+
+// set action state for every action command
+const setActionState = (data) => {
+  if (data.initiator === 'player_character') {
+    player.currentActionCategory = data.actionCategory;
   } else {
-    enemy.hitPoints -= data.hpAdjustment;
+    enemy.currentActionCategory = data.actionCategory;
+  }
+};
+
+// #here move away from mutation!!!
+const updateHitPoints = ({ adjustmentType, target, hpAdjustmentAmount }) => {
+  if (adjustmentType === '+') {
+    target.hitPoints += hpAdjustmentAmount; // ideally, this should run a state change method instead of mutating the state object
+  } else {
+    target.hitPoints -= hpAdjustmentAmount;
   }
 };
 
 // ==============
 // event actions
 // ==============
-const attack = (e) => {
-  console.log(`You swing your weapon at ${enemy.name}...`);
+
+// find a cloth and DRY this up!!!
+const attack = (e, initiator) => {
+  let actionCode = initiator === 'player_character' ? playerAttackCodes[0] : dragonAttackCodes[0];
+
+  if (!initiator) {
+    console.error('initiator cannot be null');
+    return;
+  } else if (initiator !== 'player_character') {
+    const idx = Math.floor(Math.random() * dragonAttackCodes.length);
+    actionCode = dragonAttackCodes[idx];
+    console.log(`${enemy.name} locks its menacing eyes on you...`);
+  } else {
+    console.log(`You swing your weapon at ${enemy.name}...`);
+  }
+
+  const actionStateParams = { initiator, actionCategory: actionCategories.attacks };
+  setActionState(actionStateParams);
+
   const hit = rollTwentyVsDc(enemy.armorClass);
 
   if (hit) {
-    const actioParams = { category: actionCategories.attacks, actionCode: playerAttackCodes[0] };
-    const attackAction = fetchPlayerAction(actioParams);
+    // randomize or weight dragon action
+    const actionParams = { category: actionCategories.attacks, actionCode };
+    const attackAction = initiator === 'player_character' ? fetchPlayerAction(actionParams) : fetchEnemyAction(actionParams);
     const damage = calculateDamage(attackAction.damageDieCount, attackAction.dieSides);
 
     // #here change this const name...
     const hpAdjustmentData = {
       adjustmentType: '-', // string
-      hpAdjustment: damage, // number
+      hpAdjustmentAmount: damage, // number
+      target: initiator === 'player_character' ? enemy : player,
     };
 
     updateHitPoints(hpAdjustmentData);
 
     console.log(`${attackAction.name} deals ${damage} damage`);
-    // subtract damage from dragon's hp
   } else {
-    console.log('Your attack missed');
+    console.log(`${initiator === 'player_character' ? player.name : enemy.name} missed!`);
   }
 
-  // #here
-  // DRY up this call
   console.log('\n.\n.\n.\n');
-  e.emit('dragonAction');
+
+  // DRY up this call
+  if (initiator === 'player_character') {
+    e.emit('dragonAction');
+  } else {
+    e.emit('loopGame');
+  }
 };
 
-const defend = (e) => {
-  console.log('Defending...');
+const defend = (e, initiator) => {
+  const actionStateParams = { initiator, actionCategory: actionCategories.defends };
+  setActionState(actionStateParams);
+
+  console.log('Shield up! You brqce yourself for an impending hit...');
+
   console.log('\n.\n.\n.\n');
   e.emit('dragonAction');
 };
 
 const flee = (e) => {
-  console.log('You attempt to run...');
-  console.log('\n.\n.\n.\n');
+  console.log('You turn your back and attempt to flee...');
   e.emit('dragonAction');
 };
 
