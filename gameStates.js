@@ -12,7 +12,7 @@ const playerCharacters = [
     inCombat: false, // set to true at beginning of combat
     hitPoints: 100,
     armorClass: 10,
-    defendModifier: 0.5,
+    defendModifier: 0.5, // 0.1 through 1
     currentActionCategory: null,
     actions: {
       attacks: [ // category || actionType
@@ -38,7 +38,7 @@ const nonPlayerCharacters = [
     inCombat: false, // set to true at beginning of combat
     hitPoints: 300,
     armorClass: 10,
-    defendModifier: 0,
+    defendModifier: 1,
     currentActionCategory: null,
     actions: {
       attacks: [
