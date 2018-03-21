@@ -28,19 +28,20 @@ const fetchEnemyAction = keys => (enemy.actions[keys.category].find(action => (a
 // ==============
 const rollTwentyVsDc = dc => (rollDie(20) >= dc);
 
-const calculateDamage = (dieCount, dieSides) => {
+const calculateDamage = (data) => {
   const damageCounts = [];
-  while (damageCounts.length < dieCount) {
-    damageCounts.push(rollDie(dieSides));
+  while (damageCounts.length < data.dieCount) {
+    damageCounts.push(rollDie(data.dieSides));
   }
 
-  return damageCounts.reduce((acc, cur) => acc + cur);
+  const totalDamage = damageCounts.reduce((acc, cur) => acc + cur);
+  if (data.defendModifier < 1) { console.log('damage reduced!'); }
+
+  return Math.ceil(totalDamage * (1 - data.defendModifier));
 };
 
-const calculateDamageReduction = data => (data.damage * data.defendModifier);
-
-// set action state for every action command
 const setActionState = (data) => {
+  // shape: { initiator, actionCategory }
   if (data.initiator === 'player_character') {
     player.currentActionCategory = data.actionCategory;
   } else {
@@ -85,7 +86,9 @@ const attack = (e, initiator) => {
     // randomize or weight dragon action
     const actionParams = { category: actionCategories.attacks, actionCode };
     const attackAction = initiator === 'player_character' ? fetchPlayerAction(actionParams) : fetchEnemyAction(actionParams);
-    const damage = calculateDamage(attackAction.damageDieCount, attackAction.dieSides);
+    // currently set to player defendModifier only (dragon can't take defend action yet)
+    const defendModifier = player.currentActionCategory === 'defends' ? player.defendModifier : 0;
+    const damage = calculateDamage({ dieCount: attackAction.damageDieCount, dieSides: attackAction.dieSides, defendModifier });
 
     // #here change this const name...
     const hpAdjustmentData = {

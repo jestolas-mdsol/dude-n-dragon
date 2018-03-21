@@ -55,7 +55,6 @@ const initiateCombat = () => {
   currentStatuses();
 
   rl.question('What do you want to do?\n', (input) => {
-    console.log(`You attempt to ${input}...`);
     if (playerActionNames.includes(input)) {
       emit(input, 'player_character');
     } else if (input === 'exit') {
