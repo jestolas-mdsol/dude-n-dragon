@@ -13,6 +13,7 @@ const playerCharacters = [
     hitPoints: 100,
     armorClass: 10,
     defendModifier: 0.5,
+    currentActionCategory: null,
     actions: {
       attacks: [ // category || actionType
         {
@@ -30,6 +31,7 @@ const playerCharacters = [
 const nonPlayerCharacters = [
   {
     code: 'EN01',
+    type: 'non_player_character',
     npcClass: 'wyrm', // can have other classes like civilian, "key" npcs, bandit, etc...
     reputationWithPlayer: 0, // 0 to 10, determines hostility towards PC
     name: 'Skald The Wyrm',
@@ -37,29 +39,32 @@ const nonPlayerCharacters = [
     hitPoints: 300,
     armorClass: 10,
     defendModifier: 0,
-    attacks: [
-      {
-        code: 'ATK_101',
-        name: 'Flame Breath',
-        chargeTime: 1,
-        damageDieCount: 2,
-        dieSides: 8,
-      },
-      {
-        code: 'ATK_102',
-        name: 'Claw Slash',
-        chargeTime: 0,
-        damageDieCount: 2,
-        dieSides: 4,
-      },
-      {
-        code: 'ATK_103',
-        name: 'Tail Whip',
-        chargeTime: 0,
-        damageDieCount: 1,
-        dieSides: 6,
-      },
-    ],
+    currentActionCategory: null,
+    actions: {
+      attacks: [
+        {
+          code: 'ATK_101',
+          name: 'Flame Breath',
+          chargeTime: 1,
+          damageDieCount: 2,
+          dieSides: 8,
+        },
+        {
+          code: 'ATK_102',
+          name: 'Claw Slash',
+          chargeTime: 0,
+          damageDieCount: 2,
+          dieSides: 4,
+        },
+        {
+          code: 'ATK_103',
+          name: 'Tail Whip',
+          chargeTime: 0,
+          damageDieCount: 1,
+          dieSides: 6,
+        },
+      ],
+    },
   },
 ];
 
