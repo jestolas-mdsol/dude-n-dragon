@@ -1,19 +1,14 @@
 import readline from 'readline';
 import EventEmitter from 'events';
 
-import { gameState, playerCharacters, nonPlayerCharacters } from './gameStates';
-import { initializeEventListeners } from './listeners';
-import { gameMessages, playerActionNames } from './constants';
-
-// ====================================================================================
-// NEED TO DRY!!! #here
-const fetchPlayerData = code => (playerCharacters.find(pc => pc.code === code));
-const fetchEnemyrData = code => (nonPlayerCharacters.find(pc => pc.code === code));
-
-const player = fetchPlayerData('PC01');
-const enemy = fetchEnemyrData('EN01');
-
-// ====================================================================================
+import { initializeEventListeners } from './events';
+import {
+  player,
+  enemy,
+  gameMessages,
+  playerActionNames,
+} from './constants';
+import { gameState } from './store';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -105,7 +100,7 @@ const initializeReadlineListeners = () => {
       case 'exit' || 'Exit':
         emit('shutdown');
         break;
-      case 'superloop': // #debug #here
+      case 'superloop': // #debug #here #remove
         emit('loopGame');
         break;
       default:
