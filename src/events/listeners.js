@@ -1,6 +1,6 @@
 
-import { attack, defend, flee } from './playerActions';
-import { gameLoop, incrementRounds, closeAndExit } from './game';
+import { attack, defend } from '../engine';
+import { gameLoop, closeAndExit } from '../game';
 
 const initializeEventListeners = (e) => {
   const emit = (eventName) => {
@@ -17,9 +17,9 @@ const initializeEventListeners = (e) => {
     defend(e, initiatorType);
   });
 
-  e.on('flee', (initiatorType) => {
-    flee(e, initiatorType);
-  });
+  // e.on('flee', (initiatorType) => {
+  //   flee(e, initiatorType);
+  // });
 
   e.on('dragonAction', () => {
     console.log('\npreparing dragon action...\n\n');

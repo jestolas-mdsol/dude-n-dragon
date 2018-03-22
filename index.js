@@ -1,4 +1,4 @@
-import { initializeGame } from './game';
+import { initializeGame } from './src/game.js';
 
 // #here
 // #move to own enemyActions file
