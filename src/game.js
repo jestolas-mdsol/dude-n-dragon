@@ -109,9 +109,24 @@ const initializeReadlineListeners = () => {
   });
 };
 
+const renderFlair = () => {
+  const flair = [
+  '    ____            __        ___        ____                             ',
+  '   / __ \\__  ______/ /__     ( _ )      / __ \\_________ _____ _____  ____ ',
+  '  / / / / / / / __  / _ \\   / __ \\/|   / / / / ___/ __ `/ __ `/ __ \\/ __ \\',
+  ' / /_/ / /_/ / /_/ /  __/  / /_/  <   / /_/ / /  / /_/ / /_/ / /_/ / / / /',
+  '/_____/\\__,_/\\__,_/\\___/   \\____/\\/  /_____/_/   \\__,_/\\__, /\\____/_/ /_/ ',
+  '                                                      /____/',
+  '\n\n\n',
+];
+
+console.log('booting up...\n\n\n');
+console.log(flair.join('\n'));
+}
+
 // #init
 const initializeGame = () => {
-  console.log('booting up...');
+  renderFlair();
   initializeReadlineListeners();
   initializeEventListeners(e);
 
