@@ -72,13 +72,7 @@ const defend = (e, initiator) => {
   e.emit('dragonAction');
 };
 
-const flee = (e) => {
-  console.log('You turn your back and attempt to flee...');
-  e.emit('dragonAction');
-};
-
 export {
   attack,
   defend,
-  flee,
 };

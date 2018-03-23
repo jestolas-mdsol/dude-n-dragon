@@ -8,8 +8,6 @@ const initializeEventListeners = (e) => {
   };
 
   e.on('attack', (initiatorType) => {
-    console.log('initiatorType -- listener: ', initiatorType);
-
     attack(e, initiatorType);
   });
 
@@ -17,12 +15,7 @@ const initializeEventListeners = (e) => {
     defend(e, initiatorType);
   });
 
-  // e.on('flee', (initiatorType) => {
-  //   flee(e, initiatorType);
-  // });
-
   e.on('dragonAction', () => {
-    console.log('\npreparing dragon action...\n\n');
     e.emit('attack', 'non_player_character')
   });
 
