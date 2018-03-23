@@ -6,7 +6,8 @@ import {
   player,
   enemy,
   gameMessages,
-  playerActionNames,
+  attackCommands,
+  defendCommands,
 } from './constants';
 import { gameState } from './store';
 
@@ -50,8 +51,10 @@ const initiateCombat = () => {
   currentStatuses();
 
   rl.question('What do you want to do?\n', (input) => {
-    if (playerActionNames.includes(input)) {
-      emit(input, 'player_character');
+    if (attackCommands.includes(input)) {
+      emit('attack', 'player_character');
+    } else if (defendCommands.includes(input)) {
+      emit('defend', 'player_character');
     } else if (input === 'exit') {
       emit('shutdown');
     } else {

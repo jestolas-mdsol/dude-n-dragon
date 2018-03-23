@@ -4,12 +4,12 @@ const gameMessages = {
 };
 
 // future improvement -- may not be necessary yet....
-const playerActionNames = ['attack', 'defend', 'run'];
+const attackCommands = ['a', 'attack', 'hit', 'slash', 'hit it'];
+const defendCommands = ['d', 'defend', 'shield', 'shield up', 'curl into a ball', 'brace thyself', 'brace', 'brace self'];
 
 const actionCategories = {
   attacks: 'attacks',
   defends: 'defends',
-  miscs: 'misc',
 };
 
 // consider changing to:
@@ -30,6 +30,7 @@ const actionCategories = {
 
 export {
   gameMessages,
-  playerActionNames,
+  attackCommands,
+  defendCommands,
   actionCategories,
 };

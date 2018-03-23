@@ -11,68 +11,72 @@ import {
   fetchEntityAction,
   calculateNetDamage,
   setActionState,
-  updateHitPoints
+  updateHitPoints,
+  renderActionMessage,
+  continueRound,
 } from '../utils';
 
-// find a cloth and DRY this up!!!
-const attack = (e, initiator) => {
-  if (!initiator) {
-    console.error('initiator cannot be null');
-    e.emit('shutdown');
-  } else if (initiator !== 'player_character') {
-    console.log(`${enemy.name} locks its menacing gaze upon you...`);
-  } else {
-    console.log(`You swing your weapon at ${enemy.name}...`);
+const actionRouter = ({ e, initiator, actionName }) => {
+  const entity = initiator === 'player_character' ? player : enemy;
+  // #here future improvement: set targeting logic
+  const target = initiator === 'player_character' ? enemy : player;
+  const data = {
+    e,
+    entity,
+    target,
+    actionCategory: `${actionName}s`,
   }
 
-  const entity = initiator === 'player_character' ? player : enemy;
-  const actionParams = { entity, category: actionCategories.attacks };
-  setActionState(actionParams);
+  switch(actionName) {
+    case 'attack':
+      attack(data);
+      break;
+    case 'defend':
+      defend(data);
+      break;
+    default:
+      console.log('That action does not exist! (╯°□°)╯︵ ┻━┻');
+      e.emit('shutdown');
+      break;
+  }
+};
+
+const attack = ({ e, entity, target, actionCategory }) => {
   const hit = rollTwentyVsDc(enemy.armorClass);
+  setActionState({ entity, actionCategory });
+  renderActionMessage({ entityType: entity.type, entityName: entity.name });
 
   if (hit) {
-    const attackAction = fetchEntityAction(actionParams);
-    // currently set to player defendModifier only (dragon can't take defend action yet)
-    const defendModifier = player.currentActionCategory === 'defends' ? player.defendModifier : 0;
-    const damage = calculateNetDamage({ dieCount: attackAction.damageDieCount, dieSides: attackAction.dieSides, defendModifier });
-
+    const attackAction = fetchEntityAction({ category: actionCategory, entityCode: entity.code, actions: entity.actions });
+    const damage = calculateNetDamage({ dieCount: attackAction.damageDieCount, dieSides: attackAction.dieSides, target });
     // #here change this const name...
     const hpAdjustmentData = {
-      adjustmentType: '-', // string
-      hpAdjustmentAmount: damage, // number
-      target: entity,
+      adjustmentType: '-',
+      hpAdjustmentAmount: damage,
+      entity,
     };
 
     updateHitPoints(hpAdjustmentData);
 
     console.log(`${attackAction.name} deals ${damage} damage`);
   } else {
-    console.log(`${initiator === 'player_character' ? player.name : enemy.name} missed!`);
+    console.log(`${entity.name} missed!`);
   }
 
   console.log('\n.\n.\n.\n');
-
-  // DRY up this call
-  if (initiator === 'player_character') {
-    e.emit('dragonAction');
-  } else {
-    e.emit('loopGame');
-  }
+  continueRound({ e, entityType: entity.type });
 };
 
-const defend = (e, initiator) => {
-  // DRY this up
-  const entity = initiator === 'player_character' ? player : enemy;
-  const actionParams = { entity, category: actionCategories.defends };
-  setActionState(actionParams);
+const defend = ({ e, entity, target, actionCategory }) => {
+  // target is currently unused for this action
+  setActionState({ entity, actionCategory });
 
   console.log('You raise your shield and brace yourself...');
-
   console.log('\n.\n.\n.\n');
-  e.emit('dragonAction');
+
+  continueRound({ e, entityType: entity.type });
 };
 
 export {
-  attack,
-  defend,
+  actionRouter,
 };
