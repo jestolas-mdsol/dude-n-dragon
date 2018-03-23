@@ -1,15 +1,15 @@
 // ideally, these should run a state change method instead of mutating the state object
 // #here todo: move away from mutation!!!
 
-const setActionState = ({ entity, category }) => {
-  entity.currentActionCategory = category;
+const setActionState = ({ entity, actionCategory }) => {
+  entity.currentActionCategory = actionCategory;
 };
 
-const updateHitPoints = ({ adjustmentType, target, hpAdjustmentAmount }) => {
+const updateHitPoints = ({ adjustmentType, entity, hpAdjustmentAmount }) => {
   if (adjustmentType === '+') {
-    target.hitPoints += hpAdjustmentAmount; 
+    entity.hitPoints += hpAdjustmentAmount;
   } else {
-    target.hitPoints -= hpAdjustmentAmount;
+    entity.hitPoints -= hpAdjustmentAmount;
   }
 };
 

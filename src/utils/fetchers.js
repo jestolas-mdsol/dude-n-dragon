@@ -3,12 +3,12 @@ import { playerCharacters, nonPlayerCharacters } from '../store';
 // ==============
 // private methods
 // ==============
-const fetchActionCode = (entity, category) => {
-  if (entity.code === 'EN01') {
-    const enemyActionsList = entity.actions[category];
-    const idx = Math.floor(Math.random() * enemyActionsList.length);
+const fetchActionCode = ({ category, entityCode, actionsList, }) => {
+  // #here this condition should only be applied to an npc
+  if (entityCode === 'EN01') {
+    const idx = Math.floor(Math.random() * actionsList.length);
 
-    return enemyActionsList[idx].code;
+    return actionsList[idx].code;
   }
 
   return 'ATK_01';
@@ -21,11 +21,10 @@ const fetchPlayerData = code => (playerCharacters.find(pc => pc.code === code));
 
 const fetchEnemyrData = code => (nonPlayerCharacters.find(npc => npc.code === code));
 
-const fetchEntityAction = ({ entity, category }) => {
-  const actionCode = fetchActionCode(entity, category);
+const fetchEntityAction = ({ category, entityCode, actions }) => {
+  const actionCode = fetchActionCode({ category, entityCode, actionsList: actions[category] });
 
-  return entity.actions[category]
-  .find(action => (action.code === actionCode))
+  return actions[category].find(action => (action.code === actionCode))
 };
 
 

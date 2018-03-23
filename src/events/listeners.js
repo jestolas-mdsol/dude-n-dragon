@@ -1,5 +1,5 @@
 
-import { attack, defend } from '../engine';
+import { actionRouter } from '../engine';
 import { gameLoop, closeAndExit } from '../game';
 
 const initializeEventListeners = (e) => {
@@ -8,11 +8,11 @@ const initializeEventListeners = (e) => {
   };
 
   e.on('attack', (initiatorType) => {
-    attack(e, initiatorType);
+    actionRouter({e, initiator: initiatorType, actionName: 'attack'});
   });
 
   e.on('defend', (initiatorType) => {
-    defend(e, initiatorType);
+    actionRouter({e, initiator: initiatorType, actionName: 'defend'});
   });
 
   e.on('dragonAction', () => {
