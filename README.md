@@ -4,8 +4,8 @@
 ### (WIP) This project is a work in progress
 
 ### System Requirements:
-* This is currently a game meant to be run using the system console or terminal.
-* You should be able to run this on any operating system that can run `node.js`
+* A system console or terminal.
+* Latest stable version of `node.js`
 
 ### Pre-setup Instructions:
 1. Install the latest stable version of `node.js`. [Click here for instructions](https://nodejs.org/en/)
