@@ -2,14 +2,20 @@ import readline from 'readline';
 import EventEmitter from 'events';
 
 import { initializeEventListeners } from './events';
+import { gameState } from './store';
 import {
   player,
-  enemy,
   gameMessages,
   attackCommands,
   defendCommands,
 } from './constants';
-import { gameState } from './store';
+import {
+  renderGameLogo,
+  incrementRounds,
+  showCurrentHp,
+  showBattleStartMessage,
+  updatePlayerName,
+} from './utils';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -18,37 +24,17 @@ const rl = readline.createInterface({
 
 const e = new EventEmitter();
 
-const emit = (...args) => {
-  e.emit(args[0], args[1]);
-};
-
-const incrementRounds = () => {
-  console.log(`current round count: ${gameState.currentRoundCount}`);
-  gameState.previousRoundCount = gameState.currentRoundCount;
-  gameState.currentRoundCount += 1;
-};
+const emit = (emitter, initiator) => { e.emit(emitter, initiator); };
 
 const closeAndExit = () => {
-  console.log('(╯°□°）╯︵ ┻━┻\nGoodbye...');
-  gameState.exitInvoked = true;
+  console.log('Shutting down...\n(╯°□°）╯︵ ┻━┻\nGoodbye...');
   rl.close();
   process.exit(0);
 };
 
-// #here move this...
-const currentStatuses = () => {
-  console.log(`\n\n${player.name}: ${player.hitPoints}HP`);
-  console.log(`${enemy.name}: ${enemy.hitPoints}HP\n\n`);
-};
-
-// #combat
-const initiateCombat = () => {
-  // #here
-  // trigger exit on death!
-
-  // replace with current player status
-  console.log(`You are in combat with ${enemy.name}.`);
-  currentStatuses();
+const runCombatPrompts = () => {
+  // #here - trigger exit on death!
+  showCurrentHp();
 
   rl.question('What do you want to do?\n', (input) => {
     if (attackCommands.includes(input)) {
@@ -64,9 +50,6 @@ const initiateCombat = () => {
   });
 };
 
-// #here move this Util
-const updatePlayerName = (name) => { player.name = name; };
-
 const gameStart = () => {
   if (!player.name) {
     rl.question('What is your name?\n', (answer) => {
@@ -76,16 +59,14 @@ const gameStart = () => {
         updatePlayerName(answer);
       }
 
-      console.log(`\nGreetings, ${player.name}!\n`);
-      console.log(`${gameMessages.encounter}\n\n\n`);
+      showBattleStartMessage();
       emit('loopGame');
     });
   } else {
-    initiateCombat();
+    runCombatPrompts();
   }
 };
 
-// ! ! ! on gameState change, loop the game ! ! !
 const gameLoop = () => {
   // #here
   // validate - only re-run game if current turn has ended!
@@ -112,36 +93,19 @@ const initializeReadlineListeners = () => {
   });
 };
 
-const renderFlair = () => {
-  const flair = [
-  '    ____            __        ___        ____                             ',
-  '   / __ \\__  ______/ /__     ( _ )      / __ \\_________ _____ _____  ____ ',
-  '  / / / / / / / __  / _ \\   / __ \\/|   / / / / ___/ __ `/ __ `/ __ \\/ __ \\',
-  ' / /_/ / /_/ / /_/ /  __/  / /_/  <   / /_/ / /  / /_/ / /_/ / /_/ / / / /',
-  '/_____/\\__,_/\\__,_/\\___/   \\____/\\/  /_____/_/   \\__,_/\\__, /\\____/_/ /_/ ',
-  '                                                      /____/',
-  '\n\n\n',
-];
-
-console.log('booting up...\n\n\n');
-console.log(flair.join('\n'));
-}
-
-// #init
 const initializeGame = () => {
-  renderFlair();
+  renderGameLogo();
   initializeReadlineListeners();
   initializeEventListeners(e);
 
-  console.log(gameMessages.prompt);
+  console.log(gameMessages.HELP_01);
 
-  rl.question('<(७° ʖ°७)~ "Hey, wanna play a game?" (y/n)\n', answer => (
+  rl.question('ノ(°□°)~ "Hey, wanna play a game?" (y/n)\n', answer => (
     answer === 'y' ? gameLoop() : emit('shutdown')
   ));
 };
 
 export {
-  incrementRounds,
   closeAndExit,
   gameLoop,
   initializeGame,

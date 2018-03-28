@@ -1,5 +1,5 @@
 const gameMessages = {
-  prompt: 'Enter "exit" at any time to quit the program and lose all game data!\n\n\n',
+  HELP_01: 'Enter "exit" at any time to quit the program and lose all game data!\n\n\n',
   encounter: 'You snap back to consciousness in the middle of a fight against a young dragon. You can\'t remember how the fight started, only that you must survive this encounter somehow.\n\n',
 };
 
