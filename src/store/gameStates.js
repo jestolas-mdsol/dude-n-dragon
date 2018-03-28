@@ -1,7 +1,6 @@
 const gameState = {
   previousRoundCount: 0,
   currentRoundCount: 0,
-  exitInvoked: false,
 };
 
 const playerCharacters = [
