@@ -1,11 +1,6 @@
 {
   "extends": "airbnb-base",
-  "parser": "babel-eslint",
-  "parserOptions": {
-    "sourceType": "module"
-  },
   "rules": {
-    "strict": 0,
     "no-console": 0,
     "prefer-default-export": 0
   }
