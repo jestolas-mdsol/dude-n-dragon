@@ -53,7 +53,7 @@ const attack = ({ e, entity, target, actionCategory }) => {
     const hpAdjustmentData = {
       adjustmentType: '-',
       hpAdjustmentAmount: damage,
-      entity,
+      target,
     };
 
     updateHitPoints(hpAdjustmentData);
