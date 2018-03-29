@@ -5,11 +5,11 @@ const setActionState = ({ entity, actionCategory }) => {
   entity.currentActionCategory = actionCategory;
 };
 
-const updateHitPoints = ({ adjustmentType, entity, hpAdjustmentAmount }) => {
+const updateHitPoints = ({ adjustmentType, target, hpAdjustmentAmount }) => {
   if (adjustmentType === '+') {
-    entity.hitPoints += hpAdjustmentAmount;
+    target.hitPoints += hpAdjustmentAmount;
   } else {
-    entity.hitPoints -= hpAdjustmentAmount;
+    target.hitPoints -= hpAdjustmentAmount;
   }
 };
 
