@@ -5,13 +5,15 @@ import {
 } from '../constants';
 import { gameState } from '../store';
 
+const clearMessages = () => { console.log('\x1Bc'); };
+
 const renderActionMessage = ({ entityType, entityName }) => {
   if (entityType === 'player_character') {
     console.log(`You swing your weapon at ${enemy.name}...`);
   } else {
     console.log(`${entityName} locks its menacing gaze upon you...`);
   }
-}
+};
 
 const continueRound = ({ e, entityType }) => {
   if (entityType === 'player_character') {
@@ -19,7 +21,7 @@ const continueRound = ({ e, entityType }) => {
   } else {
     e.emit('loopGame');
   }
-}
+};
 
 const incrementRounds = () => {
   console.log(`current round count: ${gameState.currentRoundCount}`);
@@ -36,7 +38,7 @@ const showCurrentHp = () => {
 const showBattleStartMessage = () => {
   console.log(`\nGreetings, ${player.name}!\n`);
   console.log(`${gameMessages.encounter}\n\n\n`);
-}
+};
 
 const updatePlayerName = (name) => { player.name = name; };
 
@@ -53,7 +55,7 @@ const renderGameLogo = () => {
 
   console.log('booting up...\n\n\n');
   console.log(flair.join('\n'));
-}
+};
 
 export {
   renderActionMessage,
@@ -63,4 +65,5 @@ export {
   showCurrentHp,
   showBattleStartMessage,
   updatePlayerName,
-}
+  clearMessages,
+};
