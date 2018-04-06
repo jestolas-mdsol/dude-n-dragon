@@ -15,6 +15,7 @@ import {
   showCurrentHp,
   showBattleStartMessage,
   updatePlayerName,
+  clearMessages,
 } from './utils';
 
 const rl = readline.createInterface({
@@ -23,7 +24,6 @@ const rl = readline.createInterface({
 });
 
 const e = new EventEmitter();
-
 const emit = (emitter, initiator) => { e.emit(emitter, initiator); };
 
 const closeAndExit = () => {
@@ -38,8 +38,10 @@ const runCombatPrompts = () => {
 
   rl.question('What do you want to do?\n', (input) => {
     if (attackCommands.includes(input)) {
+      clearMessages();
       emit('attack', 'player_character');
     } else if (defendCommands.includes(input)) {
+      clearMessages();
       emit('defend', 'player_character');
     } else if (input === 'exit') {
       emit('shutdown');

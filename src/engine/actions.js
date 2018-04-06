@@ -16,32 +16,12 @@ import {
   continueRound,
 } from '../utils';
 
-const actionRouter = ({ e, initiator, actionName }) => {
-  const entity = initiator === 'player_character' ? player : enemy;
-  // #here future improvement: set targeting logic
-  const target = initiator === 'player_character' ? enemy : player;
-  const data = {
-    e,
-    entity,
-    target,
-    actionCategory: `${actionName}s`,
-  }
-
-  switch(actionName) {
-    case 'attack':
-      attack(data);
-      break;
-    case 'defend':
-      defend(data);
-      break;
-    default:
-      console.log('That action does not exist! (╯°□°)╯︵ ┻━┻');
-      e.emit('shutdown');
-      break;
-  }
-};
-
-const attack = ({ e, entity, target, actionCategory }) => {
+const attack = ({
+  e,
+  entity,
+  target,
+  actionCategory,
+}) => {
   const hit = rollTwentyVsDc(enemy.armorClass);
   setActionState({ entity, actionCategory });
   renderActionMessage({ entityType: entity.type, entityName: entity.name });
@@ -77,6 +57,29 @@ const defend = ({ e, entity, target, actionCategory }) => {
   continueRound({ e, entityType: entity.type });
 };
 
-export {
-  actionRouter,
+const actionRouter = ({ e, initiator, actionName }) => {
+  const entity = initiator === 'player_character' ? player : enemy;
+  // #here future improvement: set targeting logic
+  const target = initiator === 'player_character' ? enemy : player;
+  const data = {
+    e,
+    entity,
+    target,
+    actionCategory: `${actionName}s`,
+  };
+
+  switch (actionName) {
+    case 'attack':
+      attack(data);
+      break;
+    case 'defend':
+      defend(data);
+      break;
+    default:
+      console.log('That action does not exist! (╯°□°)╯︵ ┻━┻');
+      e.emit('shutdown');
+      break;
+  }
 };
+
+export { actionRouter };
