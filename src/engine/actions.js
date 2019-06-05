@@ -14,6 +14,7 @@ import {
   updateHitPoints,
   renderActionMessage,
   continueRound,
+  renderDynamicActionMessage,
 } from '../utils';
 
 const attack = ({
@@ -22,32 +23,44 @@ const attack = ({
   target,
   actionCategory,
 }) => {
-  const hit = rollTwentyVsDc(enemy.armorClass);
-  setActionState({ entity, actionCategory });
-  renderActionMessage({ entityType: entity.type, entityName: entity.name });
+  const attackAction = fetchEntityAction({ category: actionCategory, entityCode: entity.code, actions: entity.actions });
+  // #here - implement charge attack wait time
+  console.log('attack action: ', attackAction);
 
-  if (hit) {
-    const attackAction = fetchEntityAction({ category: actionCategory, entityCode: entity.code, actions: entity.actions });
-    const damage = calculateNetDamage({ dieCount: attackAction.damageDieCount, dieSides: attackAction.dieSides, target });
-    // #here change this const name...
-    const hpAdjustmentData = {
-      adjustmentType: '-',
-      hpAdjustmentAmount: damage,
-      target,
-    };
+  if (attackAction.chargeTime < 1) {
+    const hit = rollTwentyVsDc(enemy.armorClass);
+    setActionState({ entity, actionCategory });
+    renderActionMessage({ entityType: entity.type, entityName: entity.name });
 
-    updateHitPoints(hpAdjustmentData);
+    if (hit) {
+      const damage = calculateNetDamage({ dieCount: attackAction.damageDieCount, dieSides: attackAction.dieSides, target });
+      // #here change this const name...
+      const hpAdjustmentData = {
+        adjustmentType: '-',
+        hpAdjustmentAmount: damage,
+        target,
+      };
 
-    console.log(`${attackAction.name} deals ${damage} damage`);
+      updateHitPoints(hpAdjustmentData);
+      console.log(`${attackAction.name} deals ${damage} damage`);
+    } else {
+      console.log(`${entity.name} missed!`);
+    }
   } else {
-    console.log(`${entity.name} missed!`);
+    renderDynamicActionMessage({ actionType: '', actionTarget: '', actionOrigin: '' });
   }
 
+  // #here remove these temp dots...
   console.log('\n.\n.\n.\n');
   continueRound({ e, entityType: entity.type });
 };
 
-const defend = ({ e, entity, target, actionCategory }) => {
+const defend = ({
+  e,
+  entity,
+  target,
+  actionCategory,
+}) => {
   // target is currently unused for this action
   setActionState({ entity, actionCategory });
 

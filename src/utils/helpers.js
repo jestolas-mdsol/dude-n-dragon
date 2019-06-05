@@ -7,6 +7,9 @@ import { gameState } from '../store';
 
 const clearMessages = () => { console.log('\x1Bc'); };
 
+const renderDynamicActionMessage = () => { console.log('foobar'); };
+
+// #here - make this dynamic action message;
 const renderActionMessage = ({ entityType, entityName }) => {
   if (entityType === 'player_character') {
     console.log(`You swing your weapon at ${enemy.name}...`);
@@ -66,4 +69,5 @@ export {
   showBattleStartMessage,
   updatePlayerName,
   clearMessages,
+  renderDynamicActionMessage,
 };
